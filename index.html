@@ -18,7 +18,6 @@
             text-shadow: 0 0 5px #00ff41;
         }
 
-        /* Matrix Rain effect */
         canvas {
             position: fixed;
             top: 0; left: 0;
@@ -46,20 +45,11 @@
             letter-spacing: 5px;
         }
 
-        .glitch {
-            animation: glitch 1s linear infinite;
-        }
-
+        .glitch { animation: glitch 1s linear infinite; }
         @keyframes glitch {
             2%, 64% { transform: translate(2px,0) skew(0deg); }
             4%, 60% { transform: translate(-2px,0) skew(0deg); }
             62% { transform: translate(0,0) skew(5deg); }
-        }
-
-        .sys-info {
-            font-size: 0.7em;
-            color: #888;
-            margin-bottom: 20px;
         }
 
         input {
@@ -70,7 +60,6 @@
             padding: 5px;
             width: 50%;
             outline: none;
-            font-family: 'Courier New', monospace;
         }
 
         button {
@@ -80,12 +69,6 @@
             padding: 8px 15px;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background: #00ff41;
-            color: #000;
         }
 
         #log-container {
@@ -97,34 +80,29 @@
             padding-left: 10px;
         }
 
-        .bar-container {
-            width: 100%;
-            background: #111;
-            height: 10px;
-            margin-top: 10px;
-        }
+        .bar-container { width: 100%; background: #111; height: 10px; margin-top: 10px; }
+        #bar-fill { width: 0%; height: 100%; background: #00ff41; box-shadow: 0 0 10px #00ff41; }
 
-        #bar-fill {
-            width: 0%;
-            height: 100%;
-            background: #00ff41;
-            box-shadow: 0 0 10px #00ff41;
-        }
-
-        .result-box {
+        .payment-box {
             text-align: center;
-            border: 2px double #ff0000;
-            padding: 15px;
-            margin-top: 10px;
+            border: 2px solid #ff0000;
+            padding: 20px;
+            background: rgba(255, 0, 0, 0.1);
+            animation: pulse 1.5s infinite;
         }
 
-        .password {
-            font-size: 2em;
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0px #ff0000; }
+            50% { box-shadow: 0 0 20px #ff0000; }
+            100% { box-shadow: 0 0 0px #ff0000; }
+        }
+
+        .price {
+            font-size: 2.5em;
+            color: #fff;
             background: #ff0000;
-            color: white;
-            padding: 5px 20px;
-            display: inline-block;
-            margin: 10px 0;
+            display: block;
+            margin: 15px 0;
             font-weight: bold;
         }
 
@@ -135,17 +113,12 @@
     <canvas id="matrix"></canvas>
 
     <div class="terminal">
-        <div class="header glitch">HRKHAVK v7.2</div>
+        <div class="header glitch">.HRKHAVK EXPLOIT</div>
         
         <div id="view-1">
-            <div class="sys-info">
-                SYSTEM: [SECURE_CORE]<br>
-                ENCRYPTION: AES-256_RSA<br>
-                STATUS: READY TO INFILTRATE
-            </div>
-            <p>> ENTER_TARGET_ROBLOX_ID:</p>
-            <input type="text" id="target" placeholder="Username..." autocomplete="off">
-            <button onclick="runExploit()">EXECUTE</button>
+            <p>> ENTER_TARGET_USER:</p>
+            <input type="text" id="target" placeholder="..." autocomplete="off">
+            <button onclick="runExploit()">.DECRYPT</button>
         </div>
 
         <div id="view-2" class="hidden">
@@ -157,57 +130,45 @@
         </div>
 
         <div id="view-3" class="hidden">
-            <div class="result-box">
-                <h3 style="color: #ff0000;">DECRYPTION SUCCESSFUL</h3>
-                <p>TARGET: <span id="final-name"></span></p>
-                <p>RAW_PASSWORD:</p>
-                <div class="password">hilangkautak</div>
-                <p style="font-size: 0.6em;">DISCLAIMER: This session is being logged by HRKHAVK</p>
+            <div class="payment-box">
+                <h2 style="color: #ff0000; margin-top: 0;">SYSTEM LOCKED!</h2>
+                <p>Data untuk <strong id="final-name"></strong> telah didekripsi.</p>
+                <p>Silahkan selesaikan pembayaran untuk melihat password:</p>
+                <span class="price">RP 100.000</span>
+                <p>Kirim ke Nomor / Dana:</p>
+                <p style="font-size: 1.5em; color: #fff; letter-spacing: 2px;">6285716075774</p>
+                <p style="font-size: 0.7em; color: #ff0000;">*Password otomatis muncul setelah konfirmasi pembayaran*</p>
+                <button onclick="alert('Menunggu konfirmasi payment...')">KONFIRMASI BAYAR</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Matrix Effect
+        // Matrix Background
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%";
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const letters = "01010101HRKHAVK0101";
         const fontSize = 16;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
+        const drops = Array(Math.floor(canvas.width/fontSize)).fill(1);
 
         function drawMatrix() {
             ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "#0F0";
-            ctx.font = fontSize + "px arial";
             for (let i = 0; i < drops.length; i++) {
-                const text = letters[Math.floor(Math.random() * letters.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                ctx.fillText(letters[Math.floor(Math.random()*letters.length)], i*fontSize, drops[i]*fontSize);
+                if (drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             }
         }
         setInterval(drawMatrix, 33);
 
-        // Exploit Logic
-        const fakeLogs = [
-            "Accessing Roblox Gateway...",
-            "Overriding CORS policy...",
-            "Extracting user_token...",
-            "Decrypting salt hashes...",
-            "Brute forcing database...",
-            "Bypassing 2FA verification...",
-            "Downloading profile_blob...",
-            "Finalizing exploit..."
-        ];
+        const fakeLogs = [".Infiltrating...", ".Accessing_DB...", ".Bypassing_Firewall...", ".Salt_Cracking...", ".Token_Found...", ".Finalizing..."];
 
         async function runExploit() {
             const user = document.getElementById('target').value;
             if (!user) return;
-
             document.getElementById('view-1').classList.add('hidden');
             document.getElementById('view-2').classList.remove('hidden');
 
@@ -225,17 +186,15 @@
             const fill = document.getElementById('bar-fill');
             
             const int = setInterval(() => {
-                p += Math.floor(Math.random() * 3) + 1;
+                p += Math.floor(Math.random() * 4) + 1;
                 if (p > 100) p = 100;
-                
                 fill.style.width = p + "%";
-                document.getElementById('percent').innerText = p + "% ANALYZING...";
+                document.getElementById('percent').innerText = p + "% COMPLETE";
 
-                if (p % 15 === 0) {
+                if (p % 20 === 0) {
                     const l = document.createElement('div');
                     l.innerText = "> " + fakeLogs[Math.floor(Math.random()*fakeLogs.length)];
                     logBox.appendChild(l);
-                    logBox.scrollTop = logBox.scrollHeight;
                 }
 
                 if (p === 100) {
@@ -244,9 +203,9 @@
                         document.getElementById('view-2').classList.add('hidden');
                         document.getElementById('view-3').classList.remove('hidden');
                         document.getElementById('final-name').innerText = name;
-                    }, 800);
+                    }, 1000);
                 }
-            }, 100);
+            }, 120);
         }
     </script>
 </body>
