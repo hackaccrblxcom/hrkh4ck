@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERMINAL ACCESS - ROBLOX EXPLOIT v4.0</title>
+    <style>
+        /* CSS STYLE */
+        body {
+            background-color: #050505;
+            color: #00ff41;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .terminal {
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #00ff41;
+            width: 90%;
+            max-width: 650px;
+            padding: 25px;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .terminal-header {
+            border-bottom: 1px solid #00ff4144;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .warning-text {
+            color: #ff3e3e;
+            text-transform: uppercase;
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+
+        input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #00ff41;
+            color: #fff;
+            padding: 5px;
+            width: 60%;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            outline: none;
+        }
+
+        button {
+            background: #00ff41;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+
+        button:hover { background: #fff; box-shadow: 0 0 15px #fff; }
+
+        #log-container {
+            height: 180px;
+            overflow-y: hidden;
+            font-size: 0.85em;
+            margin: 15px 0;
+            text-align: left;
+            line-height: 1.4;
+            color: #00cc33;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            background: #111;
+            border: 1px solid #00ff41;
+            height: 20px;
+            position: relative;
+        }
+
+        #progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #00ff41;
+            box-shadow: 0 0 10px #00ff41;
+        }
+
+        .result-screen {
+            border: 2px dashed #ff3e3e;
+            padding: 20px;
+            margin-top: 10px;
+            background: rgba(255, 0, 0, 0.05);
+        }
+
+        .pwd-box {
+            font-size: 1.5em;
+            color: #fff;
+            background: #ff3e3e;
+            padding: 5px 15px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+
+    <div class="terminal">
+        <div class="terminal-header">
+            <span>[VIRTUAL_OS EXPLOIT v4.0]</span>
+            <span id="clock"></span>
+        </div>
+
+        <div id="setup-view">
+            <p class="warning-text">SYSTEM READY: STANDBY FOR INJECTION</p>
+            <p>Targeting Roblox Mainframe Database...</p>
+            <div style="margin-top: 30px;">
+                <label>> TARGET_USER: </label>
+                <input type="text" id="target-user" placeholder="Enter Username..." spellcheck="false">
+                <br>
+                <button onclick="initiateHack()">RUN EXPLOIT.SH</button>
+            </div>
+        </div>
+
+        <div id="process-view" class="hidden">
+            <div id="log-container"></div>
+            <div class="progress-bar-bg">
+                <div id="progress-fill"></div>
+            </div>
+            <p id="percent-display">0% COMPLETE</p>
+        </div>
+
+        <div id="result-view" class="hidden">
+            <h2 style="color: #ff3e3e;">ACCESS GRANTED - DATA RECOVERED</h2>
+            <div class="result-screen">
+                <p>DATABASE_NODE: ROBLOX_PROD_04</p>
+                <p>USERNAME: <span id="final-user" style="color:#fff"></span></p>
+                <p>PASSWORD RECOVERED:</p>
+                <div class="pwd-box">hilangkautak</div>
+            </div>
+            <p style="font-size: 0.7em; margin-top: 15px;">Note: Clear browser cache after viewing to avoid detection.</p>
+        </div>
+    </div>
+
+    <script>
+        // JAVASCRIPT LOGIC
+        const logs = [
+            "Initiating handshake with users.roblox.com...",
+            "Requesting OAuth bypass token...",
+            "Accessing user JSON metadata...",
+            "Target ID found: {6285716075774}...",
+            "Bypassing SHA-256 salt layers...",
+            "Injecting SQL into production cluster...",
+            "Extracting salted password hash...",
+            "Brute forcing via cloud-GPU array...",
+            "Decrypting final string payload...",
+            "Syncing with local terminal..."
+        ];
+
+        // Jam Real-time
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+        }, 1000);
+
+        // Suara Beep (Audio Context)
+        function playBeep(freq, dur) {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.frequency.value = freq;
+            gain.gain.value = 0.1;
+            osc.start();
+            setTimeout(() => osc.stop(), dur);
+        }
+
+        async function initiateHack() {
+            const user = document.getElementById('target-user').value;
+            if (!user) return;
+
+            document.getElementById('setup-view').classList.add('hidden');
+            document.getElementById('process-view').classList.remove('hidden');
+
+            try {
+                // Gunakan Proxy & API Roblox Beneran
+                const res = await fetch(`https://corsproxy.io/?https://users.roblox.com/v1/users/search?keyword=${user}&limit=1`);
+                const data = await res.json();
+                
+                if(data.data && data.data.length > 0) {
+                    startAnimation(data.data[0].displayName);
+                } else {
+                    alert("DATABASE ERROR: Username Not Found in Roblox Cluster.");
+                    location.reload();
+                }
+            } catch (err) {
+                // Tetap jalan kalo koneksi gagal buat prank
+                startAnimation(user);
+            }
+        }
+
+        function startAnimation(username) {
+            let progress = 0;
+            const logBox = document.getElementById('log-container');
+            const fill = document.getElementById('progress-fill');
+            const percentText = document.getElementById('percent-display');
+
+            const timer = setInterval(() => {
+                progress += Math.floor(Math.random() * 4) + 1;
+                if (progress > 100) progress = 100;
+
+                fill.style.width = progress + "%";
+                percentText.innerText = progress + "% COMPLETE";
+                
+                // Tiap progress nambah, ada suara bip pendek
+                if (progress % 5 === 0) playBeep(800, 50);
+
+                // Tambah log secara acak
+                if (progress % 12 === 0 && logs.length > 0) {
+                    const p = document.createElement('p');
+                    p.innerText = "> " + logs[Math.floor(Math.random()*logs.length)];
+                    logBox.appendChild(p);
+                    logBox.scrollTop = logBox.scrollHeight;
+                }
+
+                if (progress === 100) {
+                    clearInterval(timer);
+                    playBeep(1200, 300); // Bip sukses
+                    setTimeout(() => showResult(username), 1000);
+                }
+            }, 150);
+        }
+
+        function showResult(username) {
+            document.getElementById('process-view').classList.add('hidden');
+            document.getElementById('result-view').classList.remove('hidden');
+            document.getElementById('final-user').innerText = username;
+        }
+    </script>
+</body>
+</html>
